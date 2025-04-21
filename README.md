@@ -60,4 +60,56 @@ Task:
 - Write an SQL query to transform this table into **2NF** by removing partial dependencies. Ensure that each non-key column fully depends on the entire primary key.
 
 ---
-Good luck 🚀
+Good luck �
+
+
+
+Question 1: Achieving 1NF
+
+
+CREATE TABLE NormalizedProductDetail (
+    OrderID INT,
+    CustomerName VARCHAR(100),
+    Product VARCHAR(100)
+);
+
+-- Insert data for order 101
+INSERT INTO NormalizedProductDetail VALUES (101, 'John Doe', 'Laptop');
+INSERT INTO NormalizedProductDetail VALUES (101, 'John Doe', 'Mouse');
+
+-- Insert data for order 102
+INSERT INTO NormalizedProductDetail VALUES (102, 'Jane Smith', 'Tablet');
+INSERT INTO NormalizedProductDetail VALUES (102, 'Jane Smith', 'Keyboard');
+INSERT INTO NormalizedProductDetail VALUES (102, 'Jane Smith', 'Mouse');
+
+-- Insert data for order 103
+INSERT INTO NormalizedProductDetail VALUES (103, 'Emily Clark', 'Phone');
+```
+
+Question 2: Achieving 2NF
+
+
+-- Step 1: Create Orders table to store order and customer information
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY,
+    CustomerName VARCHAR(100)
+);
+
+-- Step 2: Create OrderItems table for product details
+CREATE TABLE OrderItems (
+    OrderItemID SERIAL PRIMARY KEY,
+    OrderID INT,
+    Product VARCHAR(100),
+    Quantity INT,
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID)
+);
+
+-- Step 3: Insert data into Orders table
+INSERT INTO Orders (OrderID, CustomerName)
+SELECT DISTINCT OrderID, CustomerName FROM OrderDetails;
+
+-- Step 4: Insert data into OrderItems table
+INSERT INTO OrderItems (OrderID, Product, Quantity)
+SELECT OrderID, Product, Quantity FROM OrderDetails;
+```
+
